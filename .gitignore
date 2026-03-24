@@ -1,0 +1,9 @@
+# Build / runtime artifacts
+output/
+executed_task.ipynb
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
