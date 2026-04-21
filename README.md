@@ -26,6 +26,11 @@
 │       ├── mlp_circles_binary/       # MLP on make_circles, SGD + ReduceLROnPlateau
 │       └── mlp_digits_multiclass/    # MLP + AdamW + CosineAnnealingLR on Digits (10-class)
 │
+├── hw2-ec/                      # HW2 Extra Credit — 2 new tasks (BigQuery Bigframe + LLM/Embedding)
+│   └── tasks/
+│       ├── mlp_bq_text_embedding_hn/  # MLP on HN comment embeddings (TextEmbeddingGenerator)
+│       └── mlp_bq_llm_so_quality/     # MLP with Gemini LLM feature extraction (GeminiTextGenerator)
+│
 └── requirements.txt
 ```
 
@@ -85,6 +90,37 @@ Four tasks applying multi-layer neural networks.
 Run:
 ```bash
 python hw2/tasks/<task_id>/task.py
+```
+
+---
+
+---
+
+## HW2 Extra Credit — Neural Networks + BigQuery Bigframe + LLM/Embedding
+
+Two tasks that load data from BigQuery via `bigframes.pandas` and apply BigQuery ML remote models
+(embedding or LLM) as part of the neural network pipeline.
+
+| Task ID | BigQuery Table | BigQuery ML | What's New |
+|---|---|---|---|
+| `mlp_bq_text_embedding_hn` | `hacker_news.comments` | `TextEmbeddingGenerator` (text-embedding-004) | 768-dim text embeddings → MLP binary classifier |
+| `mlp_bq_llm_so_quality` | `stackoverflow.posts_questions` | `GeminiTextGenerator` (gemini-2.0-flash-001) | LLM difficulty score (1–5) as engineered feature → MLP binary classifier |
+
+Run (first run is slow — BigQuery + API calls; results cached as `.npy` for subsequent runs):
+```bash
+python hw2-ec/tasks/<task_id>/task.py
+```
+
+Prerequisites:
+```bash
+# Install bigframes if not present
+pip install bigframes
+
+# Activate GCP credentials (same project as hw1-ec: gen-lang-client-0916541599)
+gcloud auth application-default login
+
+# Set BQ_CONNECTION_NAME at top of each task.py to your BigQuery ML remote connection
+# To find it: bq ls --connection --project_id=gen-lang-client-0916541599 --location=us
 ```
 
 ---
