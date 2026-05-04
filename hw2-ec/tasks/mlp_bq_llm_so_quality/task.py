@@ -6,7 +6,7 @@ Level: 5
 Data Pipeline:
     bigframes.pandas loads Stack Overflow question metadata from BigQuery.
     BigQuery ML GeminiTextGenerator (gemini-2.0-flash-001) analyzes each question
-    title and rates its technical difficulty on a 1–5 scale. This LLM-derived
+    title and rates its technical difficulty on a 1-5 scale. This LLM-derived
     difficulty score is combined with numeric metadata (answer count, view count,
     post score) to form a 4-feature input for an MLP that predicts whether a
     question received an accepted answer.
@@ -27,7 +27,7 @@ Dataset:
 
 LLM Feature:
     GeminiTextGenerator prompt: "Rate difficulty 1-5: {title}"
-    Parsed response → integer 1–5 (default=3 on parse failure)
+    Parsed response → integer 1-5 (default=3 on parse failure)
 
 Architecture:
     Linear(4, 64) → BatchNorm1d(64) → ReLU → Dropout(0.2)
