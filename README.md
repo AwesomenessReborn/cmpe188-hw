@@ -31,6 +31,9 @@
 │       ├── mlp_bq_text_embedding_hn/  # MLP on HN comment embeddings (TextEmbeddingGenerator)
 │       └── mlp_bq_llm_so_quality/     # MLP with Gemini LLM feature extraction (GeminiTextGenerator)
 │
+├── hw3/                         # HW3 — LLM Reasoning Text Classification
+│   └── main.py                  # 6-pipeline comparison (TF-IDF, Word2Vec, DistilBERT)
+│
 └── requirements.txt
 ```
 
@@ -94,8 +97,6 @@ python hw2/tasks/<task_id>/task.py
 
 ---
 
----
-
 ## HW2 Extra Credit — Neural Networks + BigQuery Bigframe + LLM/Embedding
 
 Two tasks that load data from BigQuery via `bigframes.pandas` and apply BigQuery ML remote models
@@ -122,6 +123,58 @@ gcloud auth application-default login
 # Set BQ_CONNECTION_NAME at top of each task.py to your BigQuery ML remote connection
 # To find it: bq ls --connection --project_id=gen-lang-client-0916541599 --location=us
 ```
+
+---
+
+## HW3 — LLM Reasoning Data Classification
+
+Six pipelines for multi-class text classification on the Nvidia Nemotron Model Reasoning dataset
+(`task_type`: bit_manipulation, gravity, unit_conversion, cipher_text, roman, symbol_transform).
+
+**Architecture** (`hw3/main.py`):
+
+```
+Section 1:  Load CSV (train_with_task_type.csv, 9,500 rows)
+Section 2:  Text preprocessing (lowercase, strip special chars, tokenize)
+Section 3:  Stratified train/test split (80/20)
+Section 4:  Evaluation helper (accuracy, precision, recall, F1 + timing)
+Section 5:  Pipelines 1-3 — TF-IDF + Naive Bayes / SVM / k-NN
+Section 6:  Pipelines 4-5 — Word2Vec (100d, trained on data) + Random Forest / MLP
+Section 7:  Pipeline 6   — DistilBERT embeddings + Logistic Regression
+Section 8:  Results summary (DataFrame + CSV)
+Section 9:  Visualizations (bar chart, scatter plots, table image)
+```
+
+| Pipeline | Feature Extraction | Algorithm | Device |
+|---|---|---|---|
+| P1 | TF-IDF (4,000 features, 1-2 grams) | Multinomial Naive Bayes | CPU |
+| P2 | TF-IDF | Linear SVM (SGDClassifier, hinge loss) | CPU |
+| P3 | TF-IDF | k-Nearest Neighbors (k=5, cosine) | CPU |
+| P4 | Word2Vec (100d, trained on training set) | Random Forest (100 trees) | CPU |
+| P5 | Word2Vec (100d) | MLP — 3-layer PyTorch (256→128→6, ReLU, dropout) | MPS |
+| P6 | DistilBERT (distilbert-base-uncased) | Logistic Regression head | MPS |
+
+**Dependencies** (install before first run):
+```bash
+pip install gensim transformers
+```
+
+**Run:**
+```bash
+# Data: download once, place next to main.py or in /tmp/
+curl -sL https://raw.githubusercontent.com/lkk688/CoderGym/main/Nemotron/train_with_task_type.csv -o hw3/train_with_task_type.csv
+
+# Execute
+python hw3/main.py
+```
+
+**Outputs** (saved to `hw3/`):
+| File | Description |
+|---|---|
+| `results_summary.csv` | Numeric results table (accuracy, precision, recall, F1, train/inference time) |
+| `fig1_metrics_bar.png` | Grouped bar chart — Accuracy / Precision / Recall / F1 per pipeline |
+| `fig2_speed_tradeoff_scatter.png` | Scatter plot — Accuracy vs Training Time and Inference Time |
+| `fig3_results_table.png` | Color-coded results summary table image |
 
 ---
 

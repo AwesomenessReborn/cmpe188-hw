@@ -1,0 +1,13 @@
+Feature Set,Model,Accuracy,F1-Score
+F1: word_tfidf,ComplementNB (alpha=1.0),0.6863,0.6311
+F1: word_tfidf,SVM,0.8068,0.8083
+F1: word_tfidf,"k-NN (k=20,cos)",0.7668,0.7692
+F2: char_tfidf,ComplementNB (alpha=1.0),0.7647,0.762
+F2: char_tfidf,SVM,0.8511,0.8506
+F2: char_tfidf,"k-NN (k=20,cos)",0.8447,0.8454
+F3: word_tfidf+meta,ComplementNB (alpha=1.0),0.7937,0.7911
+F3: word_tfidf+meta,SVM,0.8611,0.8607
+F3: word_tfidf+meta,"k-NN (k=20,cos)",0.8105,0.8163
+F4: char_tfidf+meta,ComplementNB (alpha=1.0),0.8168,0.8208
+F4: char_tfidf+meta,SVM,0.8653,0.8642
+F4: char_tfidf+meta,"k-NN (k=20,cos)",0.8547,0.855
